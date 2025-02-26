@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Редагувати підзавдання: {{ subtask.name }}</h2>
+
+<form method="POST" action="{{ url_for('subtasks_bp.edit_subtask', subtask_id=subtask.id) }}">
+
+  <label for="name">Назва:</label><br>
+  <input type="text" id="name" name="name" value="{{ subtask.name }}" required><br><br>
+
+  <label for="deadline">Дедлайн:</label><br>
+  <input type="date" id="deadline" name="deadline" value="{{ subtask.deadline|default('') }}"><br><br>
+
+  <label for="status">Статус:</label><br>
+  <select id="status" name="status">
+    {% for st in subtask_statuses %}
+    <option value="{{ st }}" {% if st == subtask.status %}selected{% endif %}>{{ st }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <label for="assigned_role">Роль:</label><br>
+  <select name="assigned_role" id="assigned_role" required>
+    <option value="">(не призначено)</option>
+    {% if translator_role_id %}
+    <option value="{{ translator_role_id }}" {% if translator_role_id == subtask.assigned_role %}selected{% endif %}>
+      Перекладач
+    </option>
+    {% endif %}
+    {% if worker_role_id %}
+    <option value="{{ worker_role_id }}" {% if worker_role_id == subtask.assigned_role %}selected{% endif %}>
+      Працівник
+    </option>
+    {% endif %}
+  </select><br><br>
+
+  <label for="assigned_user">Відповідальний користувач:</label><br>
+  <select name="assigned_user" id="assigned_user">
+    <optgroup label="Перекладачі">
+      {% for tu in translator_users %}
+      <option value="{{ tu.id }}" {% if tu.id == subtask.assigned_user %}selected{% endif %}>
+        {{ tu.username }}
+      </option>
+      {% endfor %}
+    </optgroup>
+    <optgroup label="Працівники">
+      {% for wu in worker_users %}
+      <option value="{{ wu.id }}" {% if wu.id == subtask.assigned_user %}selected{% endif %}>
+        {{ wu.username }}
+      </option>
+      {% endfor %}
+    </optgroup>
+  </select><br><br>
+
+  <button type="submit">Зберегти</button>
+</form>
+{% endblock %}

@@ -1,0 +1,39 @@
+<!-- templates/team.html -->
+{% extends "layout.html" %}
+{% block content %}
+<h2>Наша команда</h2>
+
+{% if session['role'] == 'Адміністратор' %}
+<button style="margin-bottom:1rem;"
+  onclick="location.href='{{ url_for('team_bp.create_user') }}'">
+  Створити нового користувача
+</button>
+{% endif %}
+
+<div class="team-page">
+  {% for u in users %}
+  <div class="user-card">
+    {% if session['role'] == 'Адміністратор' %}
+    <!-- Дії (редагувати/видалити) -->
+    <div class="user-actions">
+      <a href="{{ url_for('team_bp.edit_user', user_id=u.id) }}" title="Редагувати">
+        <img src="https://img.icons8.com/ios-filled/16/000000/edit.png" alt="edit-icon" />
+      </a>
+      <form action="{{ url_for('team_bp.delete_user', user_id=u.id) }}" method="POST" style="display:inline;">
+        <button type="submit"
+                onclick="return confirm('Видалити цього користувача?')">
+            <img src="https://img.icons8.com/ios-filled/16/000000/trash.png" alt="delete-icon" />
+        </button>
+      </form>
+    </div>
+    {% endif %}
+
+    <h3>{{ u.username }}</h3>
+    <div class="user-info">
+      <p><strong>Email:</strong> {{ u.email }}</p>
+      <p><strong>Роль:</strong> {{ u.role }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

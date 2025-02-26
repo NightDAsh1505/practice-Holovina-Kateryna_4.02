@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Редагування проєкту</h2>
+
+<form method="POST" action="{{ url_for('projects_bp.edit_project', project_id=project.id) }}">
+  <label for="name">Назва проєкту:</label><br>
+  <input type="text" id="name" name="name" value="{{ project.name }}" required><br><br>
+
+  <label for="coordinator_id">Координатор:</label><br>
+  <select id="coordinator_id" name="coordinator_id" required>
+    {% for c in coords %}
+    <option value="{{ c.id }}" {% if c.id == project.coordinator_id %}selected{% endif %}>
+      {{ c.username }}
+    </option>
+    {% endfor %}
+  </select><br><br>
+
+  <label for="status">Статус:</label><br>
+  <select id="status" name="status" required>
+    <option value="" disabled>Оберіть статус</option>
+    <option value="В черзі" {% if project.status == 'В черзі' %}selected{% endif %}>В черзі</option>
+    <option value="Перекладається" {% if project.status == 'Перекладається' %}selected{% endif %}>Перекладається</option>
+    <option value="Заморожено" {% if project.status == 'Заморожено' %}selected{% endif %}>Заморожено</option>
+    <option value="Завершено" {% if project.status == 'Завершено' %}selected{% endif %}>Завершено</option>
+  </select><br><br>
+
+  <button type="submit">Зберегти</button>
+</form>
+{% endblock %}

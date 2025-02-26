@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="form-container">
+  <h2>Створити новий проєкт</h2>
+  <form method="POST" action="{{ url_for('projects_bp.create_project') }}">
+    <div class="form-group">
+      <label for="name">Назва:</label>
+      <input type="text" id="name" name="name" required />
+    </div>
+
+    <div class="form-group">
+      <label for="coordinator_id">Координатор:</label>
+      <select name="coordinator_id" id="coordinator_id">
+        <option value="" disabled selected>Оберіть координатора</option>
+        {% for u in users %}
+        <option value="{{ u.id }}">{{ u.username }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="start_date">Дата початку:</label>
+      <input type="date" id="start_date" name="start_date" />
+    </div>
+
+    <div class="form-group">
+      <label for="status">Статус:</label>
+      <select id="status" name="status" required>
+        <option value="" selected disabled>Обрати статус</option>
+        <option value="В черзі">В черзі</option>
+        <option value="Перекладається">Перекладається</option>
+        <option value="Заморожено">Заморожено</option>
+        <option value="Завершено">Завершено</option>
+      </select>
+    </div>
+
+    <button type="submit">Створити</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Завдання</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  <script>
+    function closeModal() {
+      window.history.back(3);
+      // або location.href = "..."; на якусь сторінку
+    }
+  </script>
+</head>
+<body>
+<div class="modal-overlay">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2 style="margin-top:0;">Завдання: {{ subtask.name }}</h2>
+    <!-- Меншим шрифтом інфа -->
+    <p style="font-size:0.9rem; color:#666;">
+      Проєкт: {{ project_name }} &middot;
+      Дедлайн: {{ subtask.deadline|strftime('%d/%m/%Y') }} &middot;
+      Статус: {{ subtask.status }} &middot;
+      Призначена роль: {{ subtask.assigned_role_name }} &middot;
+      Відповідальний: {{ subtask.assigned_user_name }}
+    </p>
+
+    <hr/>
+    <h3>Прикріплені файли</h3>
+    {% if attachments %}
+    <ul class="attachments-list" style="list-style:none; padding:0;">
+      {% for a in attachments %}
+      <li>
+        <a href="{{ url_for('subtasks_bp.download_attachment', attachment_id=a.id) }}" target="_blank">
+          {{ a.original_name }}
+        </a>
+        <span style="font-size:0.85rem; color:#666;">
+          (завантажив: {{ a.uploader_username }} — {{ a.uploaded_at|strftime('%d/%m/%Y %H:%M') }})
+        </span>
+        {% if user_can_delete_file(a, subtask) %}
+        <form action="{{ url_for('subtasks_bp.delete_attachment', attachment_id=a.id) }}" method="POST" style="display:inline;">
+          <button type="submit" onclick="return confirm('Видалити файл?')">Видалити</button>
+        </form>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p>Немає завантажених файлів.</p>
+    {% endif %}
+
+    {% if can_upload_file %}
+    <h4>Завантажити файл</h4>
+    <form method="POST" action="{{ url_for('subtasks_bp.upload_attachment', subtask_id=subtask.id) }}" enctype="multipart/form-data">
+      <input type="file" name="file" accept=".doc,.docx,.pdf,.jpg,.jpeg,.png,.txt" required/><br><br>
+      <button type="submit">Завантажити</button>
+    </form>
+    {% endif %}
+
+    <hr/>
+    <h3>Коментарі</h3>
+    {% if comments %}
+    <ul class="comments-list" style="list-style:none; padding:0;">
+      {% for c in comments %}
+      <li>
+        {% if c.is_deleted %}
+          <em>Видалено {{ c.updated_at|strftime("%d/%m/%Y %H:%M") }}</em>
+        {% else %}
+          <strong>{{ c.username }}</strong>
+          <span style="color:gray; font-size:0.85rem;">
+            {{ c.created_at|strftime("%d/%m/%Y %H:%M") }}
+            {% if c.updated_at %} (змінено) {% endif %}
+          </span>
+          <div>{{ c.content }}</div>
+        {% endif %}
+        {% if c.can_edit %}
+          {% if not c.is_deleted %}
+            <a href="{{ url_for('comments_bp.edit_comment', comment_id=c.id) }}">Редагувати</a>
+          {% endif %}
+          <form action="{{ url_for('comments_bp.delete_comment', comment_id=c.id) }}" method="POST" style="display:inline;">
+            <button type="submit" onclick="return confirm('Видалити коментар?')">Видалити</button>
+          </form>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>Немає коментарів.</p>
+    {% endif %}
+
+    {% if can_add_comment %}
+    <hr/>
+    <h4>Додати коментар</h4>
+    <form method="POST" action="{{ url_for('comments_bp.create_comment', subtask_id=subtask.id) }}">
+      <textarea name="content" rows="3" style="width:100%;" placeholder="Введіть коментар..."></textarea><br><br>
+      <button type="submit">Надіслати</button>
+    </form>
+    {% endif %}
+
+  </div> <!-- modal-content -->
+</div> <!-- modal-overlay -->
+</body>
+</html>

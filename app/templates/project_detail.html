@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="card" style="position: relative;">
+  <h2 style="margin-top: 0;">{{ project.name }}</h2>
+  {% if session['role'] == 'Адміністратор' or (project.coordinator and project.coordinator.id == session['user_id']) %}
+  <button style="position: absolute; top: 1rem; right: 1rem;"
+          onclick="location.href='{{ url_for('projects_bp.edit_project', project_id=project.id) }}'">
+    Редагувати
+  </button>
+  {% endif %}
+
+  <!-- Коротка інформація в одному рядку, меншим шрифтом -->
+  <p style="font-size: 0.9rem; color: #666; margin-top:0.5rem;">
+    Координатор:
+    {% if project.coordinator %}
+      {{ project.coordinator.username }} ({{ project.coordinator.email }}) &middot;
+    {% else %}
+      Немає &middot;
+    {% endif %}
+    Статус: {{ project.status }} &middot;
+    Початок: {{ project.start_date|strftime('%d/%m/%Y') }}
+  </p>
+  <!-- “Кінець” прибрали -->
+
+  {% if session['role'] == 'Адміністратор' or (project.coordinator and project.coordinator.id == session['user_id']) %}
+  <button style="margin-bottom:1rem;"
+          onclick="location.href='{{ url_for('projects_bp.create_project_task', project_id=project.id) }}'">
+    Додати главу
+  </button>
+  {% endif %}
+</div>
+
+<!-- Тепер список завдань теж робимо картками -->
+<h3>Глави</h3>
+<div style="display:flex; flex-wrap:wrap; gap:1rem;">
+  {% if ptasks %}
+    {% for t in ptasks %}
+    <div class="card project-card" style="position:relative; width:300px;">
+      <h4 style="margin-top:0;">{{ t.name }}</h4>
+      <p style="font-size:0.9rem; color:#666;">
+        Дедлайн: {{ t.deadline|strftime('%d/%m/%Y') }} &middot;
+        Статус: {{ t.status }}
+      </p>
+      <button onclick="location.href='{{ url_for('subtasks_bp.project_task_detail', project_id=project.id, ptask_id=t.id) }}'">
+        Переглянути
+      </button>
+
+      {% if session['role'] == 'Адміністратор' or (project.coordinator and project.coordinator.id == session['user_id']) %}
+      <div class="card-actions">
+        <a href="{{ url_for('projects_bp.edit_project_task', project_id=project.id, ptask_id=t.id) }}" title="Редагувати">
+          <img src="https://img.icons8.com/ios-filled/16/000000/edit.png" alt="edit-icon"/>
+        </a>
+        <form action="{{ url_for('projects_bp.delete_project_task', project_id=project.id, ptask_id=t.id) }}"
+              method="POST" style="display:inline;">
+          <button type="submit" onclick="return confirm('Видалити це завдання?')">
+            <img src="https://img.icons8.com/ios-filled/16/000000/trash.png" alt="delete-icon"/>
+          </button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+    <p>Немає завдань.</p>
+  {% endif %}
+</div>
+{% endblock %}

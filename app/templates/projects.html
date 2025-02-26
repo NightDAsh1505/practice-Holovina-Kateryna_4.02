@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Список проєктів</h2>
+
+<div class="projects-page">
+  <!-- Ліва колонка: список карток -->
+  <div class="projects-list">
+    {% for p in projects %}
+    <div class="project-card">
+      {% if session['role'] == 'Адміністратор' %}
+      <div class="card-actions">
+        <!-- Редагування -->
+        <a href="{{ url_for('projects_bp.edit_project', project_id=p.id) }}" title="Редагувати">
+          <img src="https://img.icons8.com/ios-filled/16/000000/edit.png" alt="edit-icon" />
+        </a>
+        <!-- Видалити -->
+        <form action="{{ url_for('projects_bp.delete_project', project_id=p.id) }}" method="POST" style="display:inline;">
+          <button type="submit" onclick="return confirm('Ви впевнені?')" title="Видалити">
+            <img src="https://img.icons8.com/ios-filled/16/000000/trash.png" alt="delete-icon" />
+          </button>
+        </form>
+      </div>
+      {% endif %}
+
+      <h3>{{ p.name }}</h3>
+      <div class="project-info">
+        <p>
+          <strong>Координатор:</strong>
+          {% if p.coordinator %}
+            {{ p.coordinator.username }} ({{ p.coordinator.email }})
+          {% else %}
+            -
+          {% endif %}
+        </p>
+        <p><strong>Статус:</strong> {{ p.status }}</p>
+        <p><strong>Початок:</strong> {{ p.start_date }}</p>
+      </div>
+
+      <button onclick="location.href='{{ url_for('projects_bp.project_detail', project_id=p.id) }}'">
+        Переглянути
+      </button>
+    </div>
+    {% endfor %}
+  </div> <!-- .projects-list -->
+
+  <!-- Права колонка: панель фільтрів -->
+  <div class="filters-panel">
+    <h3>Фільтри</h3>
+    <form method="GET" action="{{ url_for('projects_bp.projects') }}">
+      <div>
+        <label for="coordinator">Координатор:</label><br/>
+        <select name="coordinator" id="coordinator" style="width:100%;">
+          <option value="">(усі)</option>
+          {% for c in coords %}
+          <option value="{{ c.id }}"
+            {% if request.args.get('coordinator') == c.id|string %}selected{% endif %}>
+            {{ c.username }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label for="status">Статус:</label><br/>
+        <select name="status" id="status" style="width:100%;">
+          <option value="">(усі)</option>
+          {% for st in project_statuses %}
+          <option value="{{ st }}"
+            {% if request.args.get('status') == st %}selected{% endif %}>
+            {{ st }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label for="sort">Сортування:</label><br/>
+        <select name="sort" id="sort" style="width:100%;">
+          <option value="">(немає)</option>
+          <option value="name_asc"
+            {% if request.args.get('sort') == 'name_asc' %}selected{% endif %}>
+            Назва: А-Я
+          </option>
+          <option value="name_desc"
+            {% if request.args.get('sort') == 'name_desc' %}selected{% endif %}>
+            Назва: Я-А
+          </option>
+          <!-- Додамо сортування по даті початку: рання чи пізня -->
+          <option value="start_date_asc"
+            {% if request.args.get('sort') == 'start_date_asc' %}selected{% endif %}>
+            Початок: найраніший
+          </option>
+          <option value="start_date_desc"
+            {% if request.args.get('sort') == 'start_date_desc' %}selected{% endif %}>
+            Початок: найпізніший
+          </option>
+        </select>
+      </div>
+
+      <button type="submit" style="margin-top:0.5rem;">Застосувати</button>
+    </form>
+
+    {% if session['role'] == 'Адміністратор' %}
+    <!-- Кнопка "Очистити" – веде назад на /projects без GET-параметрів -->
+    <button class="clear-filters-btn"
+            onclick="location.href='{{ url_for('projects_bp.projects') }}'">
+      Очистити фільтри
+    </button>
+        <!-- Кнопка "Створити проєкт" під фільтрами -->
+    <button class="create-project-btn"
+            onclick="location.href='{{ url_for('projects_bp.create_project') }}'">
+      Створити новий проєкт
+    </button>
+    {% endif %}
+  </div> <!-- .filters-panel -->
+</div> <!-- .projects-page -->
+{% endblock %}

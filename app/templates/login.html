@@ -1,0 +1,39 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Авторизація</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}" />
+</head>
+<body>
+<div class="login-container">
+  <h1>Вхід у систему</h1>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul style="color:red;">
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+
+  <form method="POST" action="{{ url_for('auth_bp.login') }}">
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Пароль:</label>
+      <input type="password" id="password" name="password" required />
+    </div>
+
+    <button type="submit">Увійти</button>
+  </form>
+</div>
+</body>
+</html>

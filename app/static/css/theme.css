@@ -1,0 +1,417 @@
+/* theme.css */
+
+:root {
+  --bg-color: #FFFFFF;
+  --text-color: #333333;
+  --accent-color: #6C63FF;
+  --btn-color: rgba(0, 0, 0, 0.7);
+  --card-bg: #F5F5F5;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+
+
+  --sidebar-width: 250px;
+  --transition-speed: 0.3s;
+}
+
+body.dark-theme {
+  --bg-color: #1E1E2E;
+  --text-color: #E0E0E0;
+  --accent-color: #9D85FF;
+  --card-bg: #2A2A3D;
+  --card-shadow: rgba(0,0,0,0.2);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color var(--transition-speed);
+}
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+button:hover {
+  background-color: #5749d8;
+}
+
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--card-bg);
+  box-shadow: 2px 0 4px var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  transition: width var(--transition-speed);
+}
+
+.sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--card-shadow);
+}
+.sidebar-header a {
+  font-weight: bold;
+  font-size: 1.3rem;
+  text-decoration: none;
+  color: var(--accent-color);
+}
+
+.sidebar nav {
+  flex: 1;
+  padding: 1rem;
+}
+.sidebar nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sidebar nav ul li {
+  margin-bottom: 1rem;
+}
+.sidebar nav ul li a {
+  color: var(--text-color);
+  font-weight: 500;
+}
+.sidebar nav ul li a:hover {
+  color: var(--accent-color);
+}
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--card-shadow);
+}
+
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  transition: padding var(--transition-speed);
+}
+
+.card {
+  background-color: var(--card-bg);
+  box-shadow: 0 2px 4px var(--card-shadow);
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1rem 0;
+  transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+.card:hover {
+  box-shadow: 0 4px 8px var(--card-shadow);
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+  }
+  .main-content {
+    flex: initial;
+  }
+}
+
+.projects-page {
+  display: flex;
+  gap: 1rem;
+}
+
+.projects-list {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filters-panel {
+  width: 250px;
+  background-color: var(--card-bg);
+  box-shadow: 0 2px 4px var(--card-shadow);
+  border-radius: 6px;
+  padding: 1rem;
+  height: fit-content;
+}
+.filters-panel h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+.filters-panel form > div {
+  margin-bottom: 1rem;
+}
+.filters-panel button {
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+.create-project-btn {
+  background-color: var(--btn-color);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+.create-project-btn:hover {
+  background-color: #5749d8;
+}
+
+.clear-filters-btn {
+  background-color: #ccc;
+  color: #333;
+  margin-top: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.clear-filters-btn:hover {
+  background-color: #b5b5b5;
+}
+
+.project-card {
+  background-color: var(--card-bg);
+  width: 300px;
+  box-shadow: 0 2px 4px var(--card-shadow);
+  border-radius: 6px;
+  padding: 1rem;
+  position: relative;
+}
+.project-card:hover {
+  box-shadow: 0 4px 8px var(--card-shadow);
+}
+.project-card h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+.project-info {
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+/* Кнопки в правому верхньому кутку */
+.card-actions {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: none; /* З’явиться на hover */
+}
+.project-card:hover .card-actions {
+  display: inline-block;
+}
+.card-actions a,
+.card-actions form {
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+.card-actions button {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .projects-page {
+    flex-direction: column;
+  }
+  .filters-panel {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  .projects-list {
+    flex-wrap: wrap;
+  }
+}
+
+.team-page {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.user-card {
+  background-color: var(--card-bg);
+  width: 250px;
+  box-shadow: 0 2px 4px var(--card-shadow);
+  border-radius: 6px;
+  padding: 1rem;
+  position: relative;
+  transition: box-shadow var(--transition-speed);
+}
+.user-card:hover {
+  box-shadow: 0 4px 8px var(--card-shadow);
+}
+.user-card h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  color: var(--accent-color);
+}
+.user-card .user-info {
+  margin-bottom: 1rem;
+}
+
+.user-actions {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: none;
+}
+.user-card:hover .user-actions {
+  display: inline-block;
+}
+.user-actions a,
+.user-actions form {
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+.user-actions button {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+}
+
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: var(--card-bg);
+  box-shadow: 0 2px 4px var(--card-shadow);
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+.form-container h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--accent-color);
+}
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+.form-group label {
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+.form-container button {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.login-container {
+  max-width: 400px;
+  margin: 5rem auto;
+  background-color: var(--card-bg);
+  box-shadow: 0 2px 4px var(--card-shadow);
+  border-radius: 6px;
+  padding: 1.5rem;
+}
+.login-container h1 {
+  margin-top: 0;
+  text-align: center;
+  color: var(--accent-color);
+}
+.login-container .form-group {
+  margin-bottom: 1rem;
+}
+.login-container button {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9998;
+}
+.modal-content {
+  background-color: var(--card-bg);
+  box-shadow: 0 4px 8px var(--card-shadow);
+  border-radius: 6px;
+  width: 60%;
+  max-width: 800px;
+  padding: 2rem;
+  position: relative;
+  color: var(--text-color);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.attachments-list li,
+.comments-list li {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #ccc;
+  padding: 0.5rem 0;
+}
+
+.task-card {
+  position: relative;
+  background-color: var(--card-bg);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px var(--card-shadow);
+  padding: 1rem;
+  width: 300px;
+  margin: 1rem 0;
+  transition: box-shadow var(--transition-speed);
+}
+.task-card:hover {
+  box-shadow: 0 4px 8px var(--card-shadow);
+}
+
+.task-card .card-actions {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: none;
+}
+.task-card:hover .card-actions {
+  display: inline-block;
+}

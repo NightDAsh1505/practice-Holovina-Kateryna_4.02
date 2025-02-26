@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="card" style="position: relative;">
+  <h2 style="margin-top: 0;">{{ project_task.name }}</h2>
+  {% if can_edit_task %}
+  <button style="position:absolute; top:1rem; right:1rem;"
+          onclick="location.href='{{ url_for('projects_bp.edit_project_task', project_id=project_id, ptask_id=project_task.id) }}'">
+    Редагувати
+  </button>
+  {% endif %}
+
+  <!-- Коротка інфа в одному рядку -->
+  <p style="font-size:0.9rem; color:#666;">
+    Проєкт: {{ project_name }} &middot;
+    Дедлайн: {{ project_task.deadline|strftime('%d/%m/%Y') }} &middot;
+    Статус: {{ project_task.status }}
+  </p>
+
+  {% if can_edit_task %}
+  <button style="margin-bottom:1rem;"
+          onclick="location.href='{{ url_for('subtasks_bp.create_subtask', project_id=project_id, ptask_id=project_task.id) }}'">
+    Створити завдання
+  </button>
+  {% endif %}
+</div>
+
+<h3>Список завдань:</h3>
+<div style="display:flex; flex-wrap:wrap; gap:1rem;">
+  {% if subtasks %}
+    {% for st in subtasks %}
+    <div class="card project-card" style="width:280px; position:relative;">
+      <h4 style="margin-top:0;">{{ st.name }}</h4>
+      <p style="font-size:0.9rem; color:#666;">
+        Дедлайн: {{ st.deadline|strftime('%d/%m/%Y') }} <br/>
+        Статус: {{ st.status }}<br/>
+        Завдання: {{ st.assigned_role_name }}<br/>
+        Відповідальний: {{ st.assigned_user_name }}
+      </p>
+      <button onclick="location.href='{{ url_for('subtasks_bp.view_subtask', subtask_id=st.id) }}'">
+        Переглянути
+      </button>
+
+      {% if can_edit_task %}
+      <div class="card-actions">
+        <a href="{{ url_for('subtasks_bp.edit_subtask', subtask_id=st.id) }}" title="Редагувати">
+          <img src="https://img.icons8.com/ios-filled/16/000000/edit.png" alt="edit-icon" />
+        </a>
+        <form action="{{ url_for('subtasks_bp.delete_subtask', subtask_id=st.id) }}"
+              method="POST" style="display:inline;">
+          <button type="submit" onclick="return confirm('Видалити?')">
+            <img src="https://img.icons8.com/ios-filled/16/000000/trash.png" alt="delete-icon" />
+          </button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+    <p>Немає підзавдань</p>
+  {% endif %}
+</div>
+{% endblock %}

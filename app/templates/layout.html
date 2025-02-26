@@ -1,0 +1,86 @@
+<!-- templates/layout.html -->
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InkSpire</title>
+
+  <!-- Підключаємо стилі -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}" />
+
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- JS для збереження теми в localStorage -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-theme');
+    }
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    if (document.body.classList.contains('dark-theme')) {
+      localStorage.setItem('theme', 'dark');
+    } else {
+      localStorage.setItem('theme', 'light');
+    }
+  }
+</script>
+
+<div class="app-container">
+  <!-- Бокове меню -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <!-- INKSPIRE: посилання на головну -->
+      <a href="{{ url_for('main_bp.home') }}">InkSpire</a>
+    </div>
+
+    <nav>
+      <ul>
+        <!-- Прибрали "Головна" -->
+        <li><a href="{{ url_for('projects_bp.projects') }}">Проєкти</a></li>
+        <li><a href="{{ url_for('team_bp.team') }}">Команда</a></li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <!-- Кнопка перемикання теми -->
+      <button type="button" onclick="toggleTheme()">Змінити тему</button>
+
+      <!-- Кнопка Вийти (форма) -->
+      <form action="{{ url_for('auth_bp.logout') }}" method="POST" style="margin-top:1rem;">
+        <button type="submit" style="
+          background:none;
+          border:1px solid var(--accent-color);
+          color: var(--accent-color);
+          width:100%;
+          padding:0.5rem;
+          border-radius:4px;">
+          Вийти
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- Основний контент -->
+  <main class="main-content">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul style="color:red;">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Редагувати верхнє завдання</h2>
+
+<div class="form-container">
+  <form method="POST" action="{{ url_for('projects_bp.edit_project_task', project_id=project_id, ptask_id=task.id) }}">
+    <div class="form-group">
+      <label for="name">Назва:</label><br>
+      <input type="text" id="name" name="name" value="{{ task.name }}" required><br><br>
+    </div>
+
+    <div class="form-group">
+      <label for="deadline">Дедлайн:</label><br>
+      <input type="date" id="deadline" name="deadline" value="{{ task.deadline|default('') }}"><br><br>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Статус:</label><br>
+      <select id="status" name="status">
+        <option value="В черзі" {% if task.status == 'В черзі' %}selected{% endif %}>В черзі</option>
+        <option value="В роботі" {% if task.status == 'В роботі' %}selected{% endif %}>В роботі</option>
+        <option value="Прострочено" {% if task.status == 'Прострочено' %}selected{% endif %}>Прострочено</option>
+        <option value="Виконано" {% if task.status == 'Виконано' %}selected{% endif %}>Виконано</option>
+      </select><br><br>
+    </div>
+</div>
+
+
+  <button type="submit">Зберегти</button>
+</form>
+{% endblock %}
